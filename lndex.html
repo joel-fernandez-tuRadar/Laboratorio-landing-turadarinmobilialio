@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TuRadar Sapi - Rector</title>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=TU_LLAVE_API&callback=initMap" async defer></script>
+
+    <style>
+        /* 🟡 SOMBRA: ESTILO LG HOUSE / RADIOACTIVO */
+        body { margin: 0; padding: 0; background-color: #000; color: white; font-family: 'Segoe UI', sans-serif; }
+        #map { height: 100vh; width: 100%; position: absolute; z-index: 1; }
+        
+        .panel-rector { 
+            position: absolute; top: 10px; left: 10px; z-index: 10; 
+            background: rgba(0, 0, 0, 0.85); padding: 15px; 
+            border-radius: 15px; border: 1px solid #ff6600; 
+            width: 250px; text-align: center;
+        }
+
+        .logo-radar { width: 60px; margin-bottom: 5px; }
+        .status-beta { color: #00ff88; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+    <div class="panel-rector">
+        <div class="status-beta">Modo Rector Activado</div>
+        <h2 style="color:#ff6600; margin: 5px 0;">TuRadar</h2>
+        <p style="font-size: 12px;">Sapi v1.0 | Guatire</p>
+    </div>
+
+    <div id="map"></div>
+
+    <div id="filtro-seguridad" class="panel-rector" style="top: 150px; border-color: #00ff88;">
+    <h3 style="color: #00ff88; margin-top: 0;">🛡️ Verificación KYC</h3>
+    <p style="font-size: 11px;">Para activar tu cuenta, sube tus documentos:</p>
+    
+    <label class="btn-radar-verde" style="display: block; background: rgba(0,255,136,0.1); border: 1px solid #00ff88; color: white; padding: 10px; border-radius: 8px; cursor: pointer; margin-bottom: 10px;">
+        📸 FOTO DE CÉDULA
+        <input type="file" accept="image/*" capture="environment" style="display: none;">
+    </label>
+
+    <label class="btn-radar-verde" style="display: block; background: rgba(0,255,136,0.1); border: 1px solid #00ff88; color: white; padding: 10px; border-radius: 8px; cursor: pointer;">
+        🤳 SELFIE DE ROSTRO
+        <input type="file" accept="image/*" capture="user" style="display: none;">
+    </label>
+
+    <button onclick="verificarDocumentos()" style="width: 100%; margin-top: 15px; background: #00ff88; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">
+        ENVIAR A REVISIÓN
+    </button>
+</div>
+<div id="calculadora-comision" style="margin-top: 30px; padding: 20px; background: rgba(0,20,0,0.8); border: 2px solid #00ff88; border-radius: 12px; font-family: sans-serif;">
+    <h3 style="color: #00ff88; margin-top: 0; text-align: center;">🧮 Calculadora de Cierre</h3>
+    <p style="color: white; font-size: 12px; text-align: center;">Ingresa el monto de la venta para calcular tu parte.</p>
+    
+    <input type="number" id="monto-venta" placeholder="Monto del cierre $" style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 6px; border: none; box-sizing: border-box; font-size: 16px;">
+    
+    <button onclick="calcularComision()" style="width: 100%; padding: 12px; background: #00ff88; color: black; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px;">CALCULAR MI COMISIÓN</button>
+    
+    <div id="resultado-calculo" style="margin-top: 20px; padding: 10px; background: rgba(0,255,136,0.1); border-radius: 6px; color: #00ff88; font-weight: bold; text-align: center; font-size: 18px;"></div>
+</div>
+
+<script>
+function calcularComision() {
+    const monto = document.getElementById('monto-venta').value;
+    const resultadoDiv = document.getElementById('resultado-calculo');
+    
+    if(monto > 0) {
+        const comision = monto * 0.05; // Cálculo basado en el 5%
+        resultadoDiv.innerHTML = `💰 Tu ganancia: $${comision.toLocaleString()}`;
+        resultadoDiv.style.display = 'block';
+    } else {
+        alert("Por favor, ingresa un monto válido para calcular.");
+    }
+}
+</script>
+
+<script>
+    // 🟡 SOMBRA: LÓGICA DE VALIDACIÓN (ESTO VA AL FINAL DEL SCRIPT)
+    function verificarDocumentos() {
+        alert("🟡 SOMBRA: Documentos recibidos. El Rector Joel revisará tu identidad.");
+        document.getElementById('filtro-seguridad').style.display = 'none';
+    }
+</script>
+<div id="buscador-propiedades" style="margin-top: 30px; padding: 20px; background: rgba(0,20,40,0.9); border: 2px solid #00d4ff; border-radius: 12px; font-family: sans-serif;">
+    <h3 style="color: #00d4ff; margin-top: 0; text-align: center;">🔍 Buscador de Inventario</h3>
+    
+    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <input type="text" id="filtro-zona" placeholder="¿Qué zona buscas? (Ej: Guatire)" style="flex: 2; padding: 10px; border-radius: 6px; border: none;">
+        <select id="filtro-tipo" style="flex: 1; padding: 10px; border-radius: 6px; border: none;">
+            <option value="todos">Todos</option>
+            <option value="casa">Casa</option>
+            <option value="apto">Apartamento</option>
+            <option value="local">Local</option>
+        </select>
+    </div>
+    
+    <button onclick="buscarPropiedad()" style="width: 100%; padding: 12px; background: #00d4ff; color: black; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px;">FILTRAR PROPIEDADES</button>
+    
+    <div id="lista-resultados" style="margin-top: 20px; color: white; font-size: 14px;">
+        <p style="text-align: center; opacity: 0.7;">Los resultados aparecerán aquí...</p>
+    </div>
+</div>
+
+<script>
+function buscarPropiedad() {
+    const zona = document.getElementById('filtro-zona').value.toLowerCase();
+    const resultados = document.getElementById('lista-resultados');
+    
+    if(zona === "") {
+        alert("Escribe una zona para empezar el rastreo.");
+        return;
+    }
+    
+    // Simulación de búsqueda en base de datos
+    resultados.innerHTML = `
+        <div style="padding: 10px; border-bottom: 1px solid #444;">
+            <strong style="color: #00d4ff;">📍 Resultado en ${zona}:</strong><br>
+            Buscando coincidencias en el radar... <br>
+            <small>Conectando con base de datos de TuRadar...</small>
+        </div>
+    `;
+}
+</script>
+
+<div id="carga-datos" style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.7); border: 1px dashed #ff00ff; border-radius: 10px; text-align: center;">
+    <p id="status-carga" style="color: #ff00ff; font-weight: bold; margin: 0;">📡 RADAR EN ESPERA...</p>
+    <div id="barra-progreso" style="width: 0%; height: 5px; background: #ff00ff; margin-top: 10px; transition: width 0.5s;"></div>
+</div>
+
+<script>
+function activarCargaLaser() {
+    let barra = document.getElementById('barra-progreso');
+    let texto = document.getElementById('status-carga');
+    let ancho = 0;
+    
+    texto.innerHTML = "⚡ CARGANDO DATOS LÁSER...";
+    
+    let intervalo = setInterval(() => {
+        if (ancho >= 100) {
+            clearInterval(intervalo);
+            texto.innerHTML = "✅ DATOS SINCRONIZADOS";
+        } else {
+            ancho += 10;
+            barra.style.width = ancho + "%";
+        }
+    }, 200);
+}
+</script>
+
+    <script>
+        // 🟡 SOMBRA: INICIALIZACIÓN DEL MAPA EN GUATIRE
+        function initMap() {
+            const guatire = { lat: 10.4761, lng: -66.5411 };
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 14,
+                center: guatire,
+                styles: [
+                    { "elementType": "geometry", "stylers": [{ "color": "#212121" }] },
+                    { "elementType": "labels.text.fill", "stylers": [{ "color": "#757575" }] }
+                ] 
+            });
+        }
+    </script>
+</body>
+</html>// 🟡 SOMBRA: CHORIZO #2 - DIBUJANDO TUS ZONAS DE CONTROL
+function dibujarZonas(map) {
+    
+    // Configuración de la Zona 1: Guatire Centro
+    const zonaGuatire = [
+        { lat: 10.485, lng: -66.555 },
+        { lat: 10.495, lng: -66.545 },
+        { lat: 10.475, lng: -66.535 },
+        { lat: 10.465, lng: -66.548 }
+    ];
+
+    // 🟡 SOMBRA: ESTO PINTA EL MAPA DE NARANJA RADIOACTIVO
+    const perimetroGuatire = new google.maps.Polygon({
+        paths: zonaGuatire,
+        strokeColor: "#FF6600",
+        strokeOpacity: 0.8,
+        strokeWeight: 3,
+        fillColor: "#FF6600",
+        fillOpacity: 0.2
+    });
+
+    perimetroGuatire.setMap(map);
+
+    // 🟡 SOMBRA: ENCHUFE API DE GEOLOCALIZACIÓN
+    // Aquí es donde la App "siente" el teléfono del captador
+    console.log("Sistema de Rastreo TuRadar: Online");
+}
+
+// 🟡 SOMBRA: ACTIVAR EL DIBUJO DENTRO DEL MOTOR
+// (Asegúrate de que esta línea esté dentro de tu función initMap anterior)
+dibujarZonas(map);
